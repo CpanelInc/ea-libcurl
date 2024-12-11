@@ -183,6 +183,7 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %changelog
 * Wed Dec 11 2024 Cory McIntire <cory@cpanel.net> - 8.11.1-1
 - EA-12607: Update ea-libcurl from v8.11.0 to v8.11.1
+- CVE-2024-11053: netrc and redirect credential leak
 
 * Wed Nov 06 2024 Cory McIntire <cory@cpanel.net> - 8.11.0-1
 - EA-12523: Update libcurl from v8.10.1 to v8.11.0
