@@ -183,6 +183,9 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %changelog
 * Wed Feb 05 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.12.0-1
 - EA-12678: Update ea-libcurl from v8.11.1 to v8.12.0
+- CVE-2025-0167 / CWE-200: Exposure of Sensitive Information to an Unauthorized Actor
+- CVE-2025-0665 / CWE-1341: Multiple Releases of Same Resource or Handle
+- CVE-2025-0725 / CWE-680: Integer Overflow to Buffer Overflow
 
 * Wed Dec 11 2024 Cory McIntire <cory@cpanel.net> - 8.11.1-1
 - EA-12607: Update ea-libcurl from v8.11.0 to v8.11.1
