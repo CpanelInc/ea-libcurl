@@ -13,7 +13,7 @@
 
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: %{pkg_name}
-Version: 8.12.0
+Version: 8.12.1
 %define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 License: MIT
@@ -181,6 +181,9 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %dir %{_defaultdocdir}
 
 %changelog
+* Thu Feb 13 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.12.1-1
+- EA-12710: Update ea-libcurl from v8.12.0 to v8.12.1
+
 * Wed Feb 05 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.12.0-1
 - EA-12678: Update ea-libcurl from v8.11.1 to v8.12.0
 - CVE-2025-0167 / CWE-200: Exposure of Sensitive Information to an Unauthorized Actor
