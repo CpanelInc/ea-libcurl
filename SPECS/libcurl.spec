@@ -183,6 +183,8 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %changelog
 * Wed May 28 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.14.0-1
 - EA-12899: Update ea-libcurl from v8.12.1 to v8.14.0
+- CVE-2025-5025: No QUIC certificate pinning with wolfSSL
+- CVE-2025-4947: QUIC certificate check skip with wolfSSL
 
 * Thu Feb 13 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.12.1-1
 - EA-12710: Update ea-libcurl from v8.12.0 to v8.12.1
