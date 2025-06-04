@@ -183,6 +183,7 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %changelog
 * Wed Jun 04 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.14.1-1
 - EA-12914: Update ea-libcurl from v8.14.0 to v8.14.1
+- CVE-2025-5399: WebSocket endless loop
 
 * Wed May 28 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.14.0-1
 - EA-12899: Update ea-libcurl from v8.12.1 to v8.14.0
