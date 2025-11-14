@@ -11,10 +11,10 @@ Subject: [PATCH] Rebuild configure with the additional LDFLAG for Brotli, H2,
  create mode 100755 configure.orig
 
 diff --git a/configure b/configure
-index 434aefd..70b9600 100755
+index 57d3704..3ac4049 100755
 --- a/configure
 +++ b/configure
-@@ -976,6 +976,9 @@ NOT_CURL_CI_FALSE
+@@ -978,6 +978,9 @@ NOT_CURL_CI_FALSE
  NOT_CURL_CI_TRUE
  RC
  LT_SYS_LIBRARY_PATH
@@ -44,7 +44,7 @@ index 434aefd..70b9600 100755
    LT_SYS_LIBRARY_PATH
                User-defined run-time library search path.
  
-@@ -15372,6 +15381,12 @@ need_version=unknown
+@@ -15126,6 +15135,12 @@ need_version=unknown
  
  
  
@@ -57,7 +57,7 @@ index 434aefd..70b9600 100755
  case $host_os in
  aix3*)
    version_type=linux # correct to gnu/linux during the next big refactor
-@@ -24162,7 +24177,9 @@ printf "%s\n" "found" >&6; }
+@@ -24312,7 +24327,9 @@ printf "%s\n" "found" >&6; }
  
      if test -n "$PREFIX_BROTLI"; then
      LIB_BROTLI="-lbrotlidec -lbrotlicommon"
@@ -68,7 +68,7 @@ index 434aefd..70b9600 100755
      CPP_BROTLI=-I${PREFIX_BROTLI}/include
      DIR_BROTLI=${PREFIX_BROTLI}/lib$libsuff
    fi
-@@ -25845,8 +25862,10 @@ printf "%s\n" "$as_me: PKG_CONFIG_LIBDIR will be set to \"$OPENSSL_PCDIR\"" >&6;
+@@ -25938,8 +25955,10 @@ printf "%s\n" "$as_me: PKG_CONFIG_LIBDIR will be set to \"$OPENSSL_PCDIR\"" >&6;
  
                    LIB_OPENSSL="$PREFIX_OPENSSL/lib$libsuff"
        if test "$PREFIX_OPENSSL" != "/usr" ; then
@@ -81,7 +81,7 @@ index 434aefd..70b9600 100755
        fi
        ;;
    esac
-@@ -25998,13 +26017,14 @@ printf "%s\n" "found" >&6; }
+@@ -26091,13 +26110,14 @@ printf "%s\n" "found" >&6; }
    fi
           $PKGCONFIG --libs-only-l --libs-only-other openssl 2>/dev/null`
  
@@ -98,7 +98,7 @@ index 434aefd..70b9600 100755
        SSL_CPPFLAGS=`
    if test -n "$OPENSSL_PCDIR"; then
      PKG_CONFIG_LIBDIR="$OPENSSL_PCDIR"
-@@ -31195,15 +31215,17 @@ printf "%s\n" "$as_me: -l is $LIB_H2" >&6;}
+@@ -31421,15 +31441,17 @@ printf "%s\n" "$as_me: -l is $LIB_H2" >&6;}
      { printf "%s\n" "$as_me:${as_lineno-$LINENO}: -I is $CPP_H2" >&5
  printf "%s\n" "$as_me: -I is $CPP_H2" >&6;}
  
