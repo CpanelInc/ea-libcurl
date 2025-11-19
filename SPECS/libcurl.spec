@@ -13,8 +13,8 @@
 
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: %{pkg_name}
-Version: 8.16.0
-%define release_prefix 1
+Version: 8.17.0
+%define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
 License: MIT
 Vendor: cPanel, Inc.
@@ -42,6 +42,7 @@ BuildRoot: %{_tmppath}/%{pkg_name}-%{version}-%{release}-root
 #   4a. git format-patch --zero-commit --no-signature master..patches
 Patch1: 0001-Rebuild-configure-with-the-additional-LDFLAG-for-Bro.patch
 
+Patch2: 0002-Fix-libssh2-compatibility-for-CentOS-7.patch
 %if 0%{?rhel} < 7
 Requires: libssh2 >= 1.4.2
 %else
@@ -101,6 +102,7 @@ headers, and manual pages to develop applications using libcurl.
 %setup -q -n curl-%{version}
 %patch1 -p1 -b .sslldflags
 
+%patch2 -p1 -b .libssh2-c7
 %build
 %if 0%{?rhel} < 8
 %if 0%{?rhel} < 7
@@ -181,6 +183,12 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %dir %{_defaultdocdir}
 
 %changelog
+* Mon Nov 17 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-2
+- EA-13258: Fix CentOS 7 build by adding libssh2 compatibility patch
+
+* Wed Nov 12 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-1
+- EA-13258: Update ea-libcurl from v8.16.0 to v8.17.0
+
 * Wed Sep 10 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.16.0-1
 - EA-13099: Update ea-libcurl from v8.15.0 to v8.16.0
 - CVE-2025-10148: predictable WebSocket mask
