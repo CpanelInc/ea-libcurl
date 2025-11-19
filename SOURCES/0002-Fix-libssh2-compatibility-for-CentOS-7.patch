@@ -1,0 +1,172 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cory McIntire <cory.mcintire@webpros.com>
+Date: Wed, 19 Nov 2025 06:50:12 -0600
+Subject: [PATCH] Fix libssh2 compatibility for CentOS 7
+
+---
+ lib/vssh/libssh2.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+
+diff --git a/lib/vssh/libssh2.c b/lib/vssh/libssh2.c
+index 5990da2..4fc0e32 100644
+--- a/lib/vssh/libssh2.c
++++ b/lib/vssh/libssh2.c
+@@ -395,25 +395,41 @@ static enum curl_khtype convert_ssh2_keytype(int sshkeytype)
+   case LIBSSH2_HOSTKEY_TYPE_DSS:
+     keytype = CURLKHTYPE_DSS;
+     break;
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_256
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_256
+ #ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_256
+   case LIBSSH2_HOSTKEY_TYPE_ECDSA_256:
+     keytype = CURLKHTYPE_ECDSA;
+     break;
+ #endif
++#endif
++#endif
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_384
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_384
+ #ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_384
+   case LIBSSH2_HOSTKEY_TYPE_ECDSA_384:
+     keytype = CURLKHTYPE_ECDSA;
+     break;
+ #endif
++#endif
++#endif
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_521
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_521
+ #ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_521
+   case LIBSSH2_HOSTKEY_TYPE_ECDSA_521:
+     keytype = CURLKHTYPE_ECDSA;
+     break;
+ #endif
++#endif
++#endif
++#ifdef LIBSSH2_HOSTKEY_TYPE_ED25519
++#ifdef LIBSSH2_HOSTKEY_TYPE_ED25519
+ #ifdef LIBSSH2_HOSTKEY_TYPE_ED25519
+   case LIBSSH2_HOSTKEY_TYPE_ED25519:
+     keytype = CURLKHTYPE_ED25519;
+     break;
++#endif
++#endif
+ #endif
+   }
+   return keytype;
+@@ -456,18 +472,34 @@ static CURLcode ssh_knownhost(struct Curl_easy *data,
+       case LIBSSH2_HOSTKEY_TYPE_DSS:
+         keybit = LIBSSH2_KNOWNHOST_KEY_SSHDSS;
+         break;
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_256
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_256
+       case LIBSSH2_HOSTKEY_TYPE_ECDSA_256:
+         keybit = LIBSSH2_KNOWNHOST_KEY_ECDSA_256;
+         break;
++#endif
++#endif
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_384
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_384
+       case LIBSSH2_HOSTKEY_TYPE_ECDSA_384:
+         keybit = LIBSSH2_KNOWNHOST_KEY_ECDSA_384;
+         break;
++#endif
++#endif
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_521
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_521
+       case LIBSSH2_HOSTKEY_TYPE_ECDSA_521:
+         keybit = LIBSSH2_KNOWNHOST_KEY_ECDSA_521;
+         break;
++#endif
++#endif
++#ifdef LIBSSH2_HOSTKEY_TYPE_ED25519
++#ifdef LIBSSH2_HOSTKEY_TYPE_ED25519
+       case LIBSSH2_HOSTKEY_TYPE_ED25519:
+         keybit = LIBSSH2_KNOWNHOST_KEY_ED25519;
+         break;
++#endif
++#endif
+       default:
+         infof(data, "unsupported key type, cannot check knownhosts");
+         keybit = 0;
+@@ -583,6 +615,7 @@ static CURLcode ssh_check_fingerprint(struct Curl_easy *data,
+   infof(data, "SSH SHA256 public key: %s",
+         pubkey_sha256 != NULL ? pubkey_sha256 : "NULL");
+ 
++#ifdef LIBSSH2_HOSTKEY_HASH_SHA256
+   if(pubkey_sha256) {
+     const char *fingerprint = NULL;
+     char *fingerprint_b64 = NULL;
+@@ -645,6 +678,7 @@ static CURLcode ssh_check_fingerprint(struct Curl_easy *data,
+ 
+     infof(data, "SHA256 checksum match");
+   }
++#endif /* LIBSSH2_HOSTKEY_HASH_SHA256 */
+ 
+   if(pubkey_md5) {
+     char md5buffer[33];
+@@ -727,14 +761,30 @@ static CURLcode ssh_force_knownhost_key_type(struct Curl_easy *data,
+ {
+   CURLcode result = CURLE_OK;
+ 
++#ifdef LIBSSH2_HOSTKEY_TYPE_ED25519
++#ifdef LIBSSH2_HOSTKEY_TYPE_ED25519
+   static const char * const hostkey_method_ssh_ed25519
+     = "ssh-ed25519";
++#endif
++#endif
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_521
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_521
+   static const char * const hostkey_method_ssh_ecdsa_521
+     = "ecdsa-sha2-nistp521";
++#endif
++#endif
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_384
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_384
+   static const char * const hostkey_method_ssh_ecdsa_384
+     = "ecdsa-sha2-nistp384";
++#endif
++#endif
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_256
++#ifdef LIBSSH2_HOSTKEY_TYPE_ECDSA_256
+   static const char * const hostkey_method_ssh_ecdsa_256
+     = "ecdsa-sha2-nistp256";
++#endif
++#endif
+   static const char * const hostkey_method_ssh_rsa_all
+     = "rsa-sha2-256,rsa-sha2-512,ssh-rsa";
+   static const char * const hostkey_method_ssh_dss
+@@ -792,18 +842,34 @@ static CURLcode ssh_force_knownhost_key_type(struct Curl_easy *data,
+             conn->host.name, data->set.str[STRING_SSH_KNOWNHOSTS]);
+ 
+       switch(store->typemask & LIBSSH2_KNOWNHOST_KEY_MASK) {
++#ifdef LIBSSH2_KNOWNHOST_KEY_ED25519
++#ifdef LIBSSH2_KNOWNHOST_KEY_ED25519
+       case LIBSSH2_KNOWNHOST_KEY_ED25519:
+         hostkey_method = hostkey_method_ssh_ed25519;
+         break;
++#endif
++#endif
++#ifdef LIBSSH2_KNOWNHOST_KEY_ECDSA_521
++#ifdef LIBSSH2_KNOWNHOST_KEY_ECDSA_521
+       case LIBSSH2_KNOWNHOST_KEY_ECDSA_521:
+         hostkey_method = hostkey_method_ssh_ecdsa_521;
+         break;
++#endif
++#endif
++#ifdef LIBSSH2_KNOWNHOST_KEY_ECDSA_384
++#ifdef LIBSSH2_KNOWNHOST_KEY_ECDSA_384
+       case LIBSSH2_KNOWNHOST_KEY_ECDSA_384:
+         hostkey_method = hostkey_method_ssh_ecdsa_384;
+         break;
++#endif
++#endif
++#ifdef LIBSSH2_KNOWNHOST_KEY_ECDSA_256
++#ifdef LIBSSH2_KNOWNHOST_KEY_ECDSA_256
+       case LIBSSH2_KNOWNHOST_KEY_ECDSA_256:
+         hostkey_method = hostkey_method_ssh_ecdsa_256;
+         break;
++#endif
++#endif
+       case LIBSSH2_KNOWNHOST_KEY_SSHRSA:
+         hostkey_method = hostkey_method_ssh_rsa_all;
+         break;
