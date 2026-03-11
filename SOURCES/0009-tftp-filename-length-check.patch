@@ -1,0 +1,43 @@
+From db86f2de9bd36e981e4962babf0ec979cf72d91f Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Tue, 13 Jan 2026 08:02:19 +0100
+Subject: [PATCH] tftp: correct the filename length check
+
+Reported-by: z2_
+Bug: https://hackerone.com/reports/3508321
+Closes #20283
+
+Context-adjusted for 8.17.0 by Orbit/dev-agent (2026-03-11):
+- Target code at line 472 in 8.17.0 (upstream expected 697)
+- 8.17.0 uses free(filename) not curlx_free(filename) in error path
+- 8.17.0 has no free(filename) after the msnprintf block (was a context line in upstream)
+- Fix logic is identical: avoid integer underflow in the subtraction-based length check
+---
+ lib/tftp.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/lib/tftp.c b/lib/tftp.c
+--- a/lib/tftp.c
++++ b/lib/tftp.c
+@@ -469,16 +469,16 @@
+     if(result)
+       return result;
+
+-    if(strlen(filename) > (state->blksize - strlen(mode) - 4)) {
++    if(strlen(filename) + strlen(mode) + 4 > state->blksize) {
+       failf(data, "TFTP filename too long");
+       free(filename);
+       return CURLE_TFTP_ILLEGAL; /* too long filename field */
+     }
+
+-    curl_msnprintf((char *)state->spacket.data + 2,
+-                   state->blksize,
+-                   "%s%c%s%c", filename, '\0',  mode, '\0');
+-    sbytes = 4 + strlen(filename) + strlen(mode);
++    sbytes = 2 +
++      curl_msnprintf((char *)state->spacket.data + 2,
++                     state->blksize,
++                     "%s%c%s%c", filename, '\0',  mode, '\0');
+
+     /* optional addition of TFTP options */
+     if(!data->set.tftp_no_options) {
