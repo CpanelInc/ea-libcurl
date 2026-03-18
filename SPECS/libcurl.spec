@@ -14,7 +14,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: %{pkg_name}
 Version: 8.17.0
-%define release_prefix 2
+%define release_prefix 3
 Release: %{release_prefix}%{?dist}.cpanel
 License: MIT
 Vendor: cPanel, Inc.
@@ -43,6 +43,15 @@ BuildRoot: %{_tmppath}/%{pkg_name}-%{version}-%{release}-root
 Patch1: 0001-Rebuild-configure-with-the-additional-LDFLAG-for-Bro.patch
 
 Patch2: 0002-Fix-libssh2-compatibility-for-CentOS-7.patch
+
+# EA-13370: CVE backports for curl 8.19.0 security fixes
+Patch3: 0003-CVE-2026-3805-smb-use-after-free.patch
+Patch4: 0004-CVE-2026-3783-bearer-token-leak-netrc-redirect.patch
+Patch5: 0005-CVE-2026-1965-http-negotiate-connection-reuse-1of2.patch
+Patch6: 0006-CVE-2026-1965-http-negotiate-connection-reuse-2of2.patch
+Patch7: 0007-CVE-2026-3784-proxy-credential-reuse.patch
+Patch8: 0008-mqtt-too-big-message-check.patch
+Patch9: 0009-tftp-filename-length-check.patch
 %if 0%{?rhel} < 7
 Requires: libssh2 >= 1.4.2
 %else
@@ -103,6 +112,13 @@ headers, and manual pages to develop applications using libcurl.
 %patch1 -p1 -b .sslldflags
 
 %patch2 -p1 -b .libssh2-c7
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
 %build
 %if 0%{?rhel} < 8
 %if 0%{?rhel} < 7
@@ -183,6 +199,14 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %dir %{_defaultdocdir}
 
 %changelog
+* Wed Mar 11 2026 Cory McIntire <cory@cpanel.net> - 8.17.0-3
+- EA-13370: Security: backport CVE-2026-3805 (SMB use-after-free, Medium)
+- EA-13370: Security: backport CVE-2026-3783 (bearer token leak via netrc+redirect, Medium)
+- EA-13370: Security: backport CVE-2026-1965 (HTTP Negotiate connection reuse, Medium)
+- EA-13370: Security: backport CVE-2026-3784 (proxy credential reuse, Low)
+- EA-13370: Security: backport MQTT too-big-message-check (HackerOne 3508500)
+- EA-13370: Security: backport TFTP filename length check (HackerOne 3508321)
+
 * Mon Nov 17 2025 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-2
 - EA-13258: Fix CentOS 7 build by adding libssh2 compatibility patch
 

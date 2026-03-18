@@ -1,0 +1,41 @@
+From dac98ccfa27a392edd946227483bfac8f466219a Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Tue, 13 Jan 2026 08:20:12 +0100
+Subject: [PATCH] mqtt: better too-big-message-check
+
+Reported-by: gudyuu on hackerone
+Bug: https://hackerone.com/reports/3508500
+Closes #20281
+
+Context-adjusted for 8.17.0 by Orbit/dev-agent (2026-03-11):
+- MAX_MQTT_MESSAGE_SIZE did not exist in 8.17.0 (was introduced between 8.17.0 and 8.19.0)
+- This combined patch adds the define AND the corrected/fixed check directly
+- The buggy intermediate form (MAX_MQTT_MESSAGE_SIZE - remaininglength - 1 < encodelen)
+  is intentionally skipped; only the final fixed expression is applied
+- Uses malloc (8.17.0 style) not curlx_malloc
+---
+ lib/mqtt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/lib/mqtt.c b/lib/mqtt.c
+--- a/lib/mqtt.c
++++ b/lib/mqtt.c
+@@ -58,6 +58,7 @@
+ #define MQTT_CONNACK_LEN 2
+ #define MQTT_SUBACK_LEN 3
+ #define MQTT_CLIENTID_LEN 12 /* "curl0123abcd" */
++#define MAX_MQTT_MESSAGE_SIZE 0xFFFFFFF
+
+ /* meta key for storing protocol meta at easy handle */
+ #define CURL_META_MQTT_EASY   "meta:proto:mqtt:easy"
+@@ -611,6 +612,10 @@
+
+   remaininglength = payloadlen + 2 + topiclen;
+   encodelen = mqtt_encode_len(encodedbytes, remaininglength);
++  if(remaininglength > (MAX_MQTT_MESSAGE_SIZE - encodelen - 1)) {
++    result = CURLE_TOO_LARGE;
++    goto fail;
++  }
+
+   /* add the control byte and the encoded remaining length */
+   pkt = malloc(remaininglength + 1 + encodelen);
