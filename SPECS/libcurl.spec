@@ -14,7 +14,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: %{pkg_name}
 Version: 8.17.0
-%define release_prefix 3
+%define release_prefix 4
 Release: %{release_prefix}%{?dist}.cpanel
 License: MIT
 Vendor: cPanel, Inc.
@@ -52,6 +52,9 @@ Patch6: 0006-CVE-2026-1965-http-negotiate-connection-reuse-2of2.patch
 Patch7: 0007-CVE-2026-3784-proxy-credential-reuse.patch
 Patch8: 0008-mqtt-too-big-message-check.patch
 Patch9: 0009-tftp-filename-length-check.patch
+
+# EA-13421: CVE backports for curl 8.20.0 security fixes
+Patch10: 0010-backport-curl-8.20.0-CVE-security-fixes.patch
 %if 0%{?rhel} < 7
 Requires: libssh2 >= 1.4.2
 %else
@@ -119,6 +122,7 @@ headers, and manual pages to develop applications using libcurl.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 %build
 %if 0%{?rhel} < 8
 %if 0%{?rhel} < 7
@@ -199,6 +203,14 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %dir %{_defaultdocdir}
 
 %changelog
+* Fri May  1 2026 Cory McIntire <cory@cpanel.net> - 8.17.0-4
+- EA-13421: Security: backport CVE-2026-5545 (HTTP Negotiate connection reuse auth check, Medium)
+- EA-13421: Security: backport CVE-2026-4873 (non-TLS STARTTLS connection reuse bypass, Low)
+- EA-13421: Security: backport CVE-2026-7168 (proxy Digest auth state leak on proxy switch, Medium)
+- EA-13421: Security: backport CVE-2026-6253 (proxy credentials not cleared on port/scheme change, Medium)
+- EA-13421: Security: backport CVE-2026-6276 (stale cookiehost on handle reuse, Low)
+- EA-13421: Security: backport CVE-2026-6429 (netrc credential leak via redirect, Medium)
+
 * Wed Mar 11 2026 Cory McIntire <cory@cpanel.net> - 8.17.0-3
 - EA-13370: Security: backport CVE-2026-3805 (SMB use-after-free, Medium)
 - EA-13370: Security: backport CVE-2026-3783 (bearer token leak via netrc+redirect, Medium)
