@@ -1,0 +1,21 @@
+--- a/lib/content_encoding.c
++++ b/lib/content_encoding.c
+@@ -75,9 +75,17 @@ struct zlib_writer {
+ 
+ #ifdef HAVE_LIBZ
+ 
++/* CentOS 6 zlib compatibility */
++#if ZLIB_VERNUM < 0x1252
++#ifndef z_const
++#define z_const const
++#endif
++#endif
++
++#if 0
+ #if !defined(ZLIB_VERNUM) || (ZLIB_VERNUM < 0x1252)
+ #error "requires zlib 1.2.5.2 or newer"
+ #endif
++#endif
+ 
+ typedef enum {
+   ZLIB_UNINIT,               /* uninitialized */
