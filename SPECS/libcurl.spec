@@ -14,7 +14,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: %{pkg_name}
 Version: 8.17.0
-%define release_prefix 6
+%define release_prefix 7
 Release: %{release_prefix}%{?dist}.cpanel
 License: MIT
 Vendor: cPanel, Inc.
@@ -75,6 +75,11 @@ Patch20: 0020-CVE-2026-11586-ws-auto-pong-memory-exhaustion.patch
 Patch21: 0021-CVE-2026-11856-digest-cross-origin-state-leak.patch
 Patch22: 0022-CVE-2026-8926-netrc-wrong-user-password.patch
 Patch23: 0023-CVE-2026-8458-negotiate-connreuse-service-name.patch
+
+# EA-13549: CVE backports for curl 8.22.0 security fixes
+Patch24: 0024-CVE-2026-80255-cookie-tab-secure-attribute-bypass.patch
+Patch25: 0025-CVE-2026-80230-openssl-pinning-bypass-no-server-cert.patch
+Patch26: 0026-CVE-2026-18924-http2-server-push-share-uaf.patch
 %if 0%{?rhel} < 7
 Requires: libssh2 >= 1.4.2
 %else
@@ -156,6 +161,9 @@ headers, and manual pages to develop applications using libcurl.
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
+%patch24 -p1
+%patch25 -p1
+%patch26 -p1
 %build
 %if 0%{?rhel} < 8
 %if 0%{?rhel} < 7
@@ -236,6 +244,12 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %dir %{_defaultdocdir}
 
 %changelog
+* Tue Oct 06 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-7
+- EA-13549: Security: backport CVE-2026-80255 (Secure cookie attribute bypass with a tab, Low)
+- EA-13549: Security: backport CVE-2026-80230 (OpenSSL public key pinning bypass with no server certificate, Low)
+- EA-13549: Security: backport CVE-2026-18924 (HTTP/2 server push use-after-free with a shared connection cache, Low)
+- EA-13549: Not applicable to this build: CVE-2026-80229 (OpenSSL 3 only), CVE-2026-80231 (Windows and macOS only), CVE-2026-82208 (wolfSSL only), CVE-2026-82209 (libpsl is not built), CVE-2026-13608 (LDAP is not built)
+
 * Mon Jul 06 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-6
 - EA-13474: Security: backport CVE-2026-8458 (Negotiate connection reuse ignores CURLOPT_SERVICE_NAME, Low)
 - EA-13474: Security: backport CVE-2026-8926 (netrc returns wrong user's password on login mismatch, Low)
