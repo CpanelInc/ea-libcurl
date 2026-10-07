@@ -1,0 +1,14 @@
+Pinned at 8.17.0: curl 8.18.0 and later require OpenSSL 3, which CentOS 7 lacks.
+Security fixes are backported instead (`et update` must not be run on this repo).
+
+CVEs listed here are not applicable to this build or have no upstream fix to
+backport, so the update watcher stops reporting them:
+
+CVE-2025-13034  QUIC with GnuTLS; this build uses OpenSSL, no QUIC
+CVE-2025-14017  LDAPS; LDAP is not built
+CVE-2025-15079  libssh; this build uses libssh2
+CVE-2025-15224  libssh; this build uses libssh2
+CVE-2026-7009   Apple SecTrust only
+CVE-2026-8925   GSASL; not built
+CVE-2026-9547   libssh; this build uses libssh2
+CVE-2026-19931  no code fix for GSSAPI builds upstream (curl 1c58877705)
