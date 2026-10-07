@@ -14,7 +14,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: %{pkg_name}
 Version: 8.17.0
-%define release_prefix 7
+%define release_prefix 8
 Release: %{release_prefix}%{?dist}.cpanel
 License: MIT
 Vendor: cPanel, Inc.
@@ -80,6 +80,9 @@ Patch23: 0023-CVE-2026-8458-negotiate-connreuse-service-name.patch
 Patch24: 0024-CVE-2026-80255-cookie-tab-secure-attribute-bypass.patch
 Patch25: 0025-CVE-2026-80230-openssl-pinning-bypass-no-server-cert.patch
 Patch26: 0026-CVE-2026-18924-http2-server-push-share-uaf.patch
+Patch27: 0027-CVE-2025-14524-sasl-bearer-token-leak-on-redirect.patch
+Patch28: 0028-CVE-2025-14819-openssl-partialchain-ca-cache.patch
+Patch29: 0029-CVE-2026-5773-smb-disable-connection-reuse.patch
 %if 0%{?rhel} < 7
 Requires: libssh2 >= 1.4.2
 %else
@@ -164,6 +167,9 @@ headers, and manual pages to develop applications using libcurl.
 %patch24 -p1
 %patch25 -p1
 %patch26 -p1
+%patch27 -p1
+%patch28 -p1
+%patch29 -p1
 %build
 %if 0%{?rhel} < 8
 %if 0%{?rhel} < 7
@@ -244,6 +250,12 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %dir %{_defaultdocdir}
 
 %changelog
+* Wed Oct 07 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-8
+- EA-13549: Security: backport CVE-2025-14524 (bearer token leak on cross-protocol redirect, Low)
+- EA-13549: Security: backport CVE-2025-14819 (OpenSSL partial chain store policy bypass, Low)
+- EA-13549: Security: backport CVE-2026-5773 (wrong reuse of SMB connection, Low)
+- EA-13549: Not applicable to this build: CVE-2025-13034 (GnuTLS QUIC only), CVE-2025-14017 (LDAP is not built), CVE-2025-15079 and CVE-2025-15224 (libssh only), CVE-2026-7009 (Apple SecTrust only), CVE-2026-8925 (GSASL is not built), CVE-2026-9547 (libssh only)
+
 * Tue Oct 06 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-7
 - EA-13549: Security: backport CVE-2026-80255 (Secure cookie attribute bypass with a tab, Low)
 - EA-13549: Security: backport CVE-2026-80230 (OpenSSL public key pinning bypass with no server certificate, Low)
