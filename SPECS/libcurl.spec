@@ -14,7 +14,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: %{pkg_name}
 Version: 8.17.0
-%define release_prefix 8
+%define release_prefix 9
 Release: %{release_prefix}%{?dist}.cpanel
 License: MIT
 Vendor: cPanel, Inc.
@@ -83,6 +83,22 @@ Patch26: 0026-CVE-2026-18924-http2-server-push-share-uaf.patch
 Patch27: 0027-CVE-2025-14524-sasl-bearer-token-leak-on-redirect.patch
 Patch28: 0028-CVE-2025-14819-openssl-partialchain-ca-cache.patch
 Patch29: 0029-CVE-2026-5773-smb-disable-connection-reuse.patch
+
+# EA-13595: CVE backports for curl 8.23.0 security fixes
+Patch30: 0030-CVE-2026-92392-http2-upload-uaf-multi-done-order.patch
+Patch31: 0031-CVE-2026-107929-interface-connection-reuse-match.patch
+Patch32: 0032-CVE-2026-94266-getinfo-effective-url-no-creds.patch
+Patch33: 0033-CVE-2026-92391-mime-free-non-recursive.patch
+Patch34: 0034-CVE-2026-92390-tool-J-buffer-headers-early-hints.patch
+Patch35: 0035-CVE-2026-92389-tftp-verify-direction.patch
+Patch36: 0036-CVE-2026-92388-ftp-wildcard-no-writefunc-override.patch
+Patch37: 0037-CVE-2026-92387-pingpong-max-loop-counter.patch
+Patch38: 0038-CVE-2026-92386-cookie-jar-accept-longer-lines.patch
+Patch39: 0039-CVE-2026-87865-libssh2-hashed-knownhosts-match-host.patch
+Patch40: 0040-CVE-2026-87863-hsts-cap-max-age.patch
+Patch41: 0041-CVE-2026-87862-hsts-load-only-exact-duplicates.patch
+Patch42: 0042-CVE-2026-86414-connect-ignore-401-auth.patch
+Patch43: 0043-CVE-2026-86410-tool-always-set-ssh-host-verification.patch
 %if 0%{?rhel} < 7
 Requires: libssh2 >= 1.4.2
 %else
@@ -170,6 +186,20 @@ headers, and manual pages to develop applications using libcurl.
 %patch27 -p1
 %patch28 -p1
 %patch29 -p1
+%patch30 -p1
+%patch31 -p1
+%patch32 -p1
+%patch33 -p1
+%patch34 -p1
+%patch35 -p1
+%patch36 -p1
+%patch37 -p1
+%patch38 -p1
+%patch39 -p1
+%patch40 -p1
+%patch41 -p1
+%patch42 -p1
+%patch43 -p1
 %build
 %if 0%{?rhel} < 8
 %if 0%{?rhel} < 7
@@ -250,6 +280,9 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %dir %{_defaultdocdir}
 
 %changelog
+* Thu Oct 15 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-9
+- EA-13595: Security: backport curl 8.23.0 fixes for CVE-2026-92392 (HTTP/2 upload use-after-free, High), CVE-2026-107929, CVE-2026-94266, CVE-2026-92391, CVE-2026-92390, CVE-2026-92389, CVE-2026-92388, CVE-2026-92387, CVE-2026-92386, CVE-2026-87865, CVE-2026-87863, CVE-2026-87862, CVE-2026-86414 and CVE-2026-86410 (Low)
+
 * Wed Oct 07 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-8
 - EA-13549: Security: backport CVE-2025-14524 (bearer token leak on cross-protocol redirect, Low)
 - EA-13549: Security: backport CVE-2025-14819 (OpenSSL partial chain store policy bypass, Low)
