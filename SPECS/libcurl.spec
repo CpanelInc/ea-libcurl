@@ -14,7 +14,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: %{pkg_name}
 Version: 8.17.0
-%define release_prefix 9
+%define release_prefix 10
 Release: %{release_prefix}%{?dist}.cpanel
 License: MIT
 Vendor: cPanel, Inc.
@@ -99,6 +99,8 @@ Patch40: 0040-CVE-2026-87863-hsts-cap-max-age.patch
 Patch41: 0041-CVE-2026-87862-hsts-load-only-exact-duplicates.patch
 Patch42: 0042-CVE-2026-86414-connect-ignore-401-auth.patch
 Patch43: 0043-CVE-2026-86410-tool-always-set-ssh-host-verification.patch
+Patch44: 0044-CVE-2026-86409-aws-sigv4-null-disables-auth.patch
+Patch45: 0045-CVE-2026-87864-imap-append-crlf.patch
 %if 0%{?rhel} < 7
 Requires: libssh2 >= 1.4.2
 %else
@@ -200,6 +202,8 @@ headers, and manual pages to develop applications using libcurl.
 %patch41 -p1
 %patch42 -p1
 %patch43 -p1
+%patch44 -p1
+%patch45 -p1
 %build
 %if 0%{?rhel} < 8
 %if 0%{?rhel} < 7
@@ -280,6 +284,10 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 %dir %{_defaultdocdir}
 
 %changelog
+* Sun Nov 15 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-10
+- EA-13587: Security: backport CVE-2026-86409 (stale AWS SigV4 headers after clearing CURLOPT_AWS_SIGV4, Low) and CVE-2026-87864 (IMAP APPEND command injection with CRLF conversion, Low)
+- EA-13587: Not applicable to this build: CVE-2026-107928 (GnuTLS only), CVE-2026-87866 (wolfSSL only)
+
 * Thu Oct 15 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-9
 - EA-13595: Security: backport curl 8.23.0 fixes for CVE-2026-92392 (HTTP/2 upload use-after-free, High), CVE-2026-107929, CVE-2026-94266, CVE-2026-92391, CVE-2026-92390, CVE-2026-92389, CVE-2026-92388, CVE-2026-92387, CVE-2026-92386, CVE-2026-87865, CVE-2026-87863, CVE-2026-87862, CVE-2026-86414 and CVE-2026-86410 (Low)
 
