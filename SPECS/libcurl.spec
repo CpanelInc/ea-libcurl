@@ -285,8 +285,9 @@ install -m 755 -d %{buildroot}%{_defaultdocdir}
 
 %changelog
 * Sun Nov 15 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-10
-- EA-13587: Security: backport CVE-2026-86409 (stale AWS SigV4 headers after clearing CURLOPT_AWS_SIGV4, Low) and CVE-2026-87864 (IMAP APPEND command injection with CRLF conversion, Low)
+- EA-13587: Security: backport CVE-2026-86409 (stale AWS SigV4 headers after clearing CURLOPT_AWS_SIGV4, Low) and CVE-2026-87864 (IMAP APPEND command injection with CRLF conversion, Low). IMAP APPEND with CRLF conversion now fails with exit code 25 instead of sending an oversized message
 - EA-13587: Not applicable to this build: CVE-2026-107928 (GnuTLS only), CVE-2026-87866 (wolfSSL only)
+- EA-13587: CVE-2026-19931 (Negotiate ambient user connection reuse, Medium): no code change; upstream's ambient-user check was Windows SSPI only and was later removed. Applications that switch the Kerberos user between transfers with empty credentials should set CURLOPT_FORBID_REUSE
 
 * Thu Oct 15 2026 Cory McIntire <cory.mcintire@webpros.com> - 8.17.0-9
 - EA-13595: Security: backport curl 8.23.0 fixes for CVE-2026-92392 (HTTP/2 upload use-after-free, High), CVE-2026-107929, CVE-2026-94266, CVE-2026-92391, CVE-2026-92390, CVE-2026-92389, CVE-2026-92388, CVE-2026-92387, CVE-2026-92386, CVE-2026-87865, CVE-2026-87863, CVE-2026-87862, CVE-2026-86414 and CVE-2026-86410 (Low)

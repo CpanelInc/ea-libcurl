@@ -12,3 +12,8 @@ CVE-2026-7009   Apple SecTrust only
 CVE-2026-8925   GSASL; not built
 CVE-2026-9547   libssh; this build uses libssh2
 CVE-2026-19931  no code fix for GSSAPI builds upstream (curl 1c58877705)
+  Advisory fix marker 7103a93b05 is a connection-cache refactor, not backported:
+  its ambient-user check is Windows SSPI only and 1c58877705 removed it again.
+  This is a documented disposition, not a claim that Linux ambient-user reuse is fixed.
+CVE-2026-107928 GnuTLS WebSocket upload only; this build uses OpenSSL
+CVE-2026-87866  wolfSSL public-key pinning only; this build uses OpenSSL
